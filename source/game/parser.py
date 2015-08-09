@@ -1,7 +1,7 @@
 """ Contains the singleton GameParser object and its global methods. """
 
-from .piece import Piece
-from .logger import logger
+from game.piece import Piece
+from game.logger import logger
 
 
 class Parser:
@@ -68,8 +68,8 @@ class Parser:
 
         :param file: Level file to parse.
         :type file: File
-        :param: Fully populated Board object.
-        :type: Board
+        :param game_board: Fully populated Board object.
+        :type game_board: Board
         """
         file = open(file, "r")
 
@@ -80,11 +80,11 @@ class Parser:
             width = 0
             for char in line.split():
                 # When one is found, add to the Board.
-                if (Parser.is_piece(char)):
-                    new_piece = GamePiece(Parser.convert_char_to_player(char),
-                                          width,
-                                          height,
-                                          char)
+                if Parser.is_piece(char):
+                    new_piece = Piece(Parser.convert_char_to_player(char),
+                                      width,
+                                      height,
+                                      char)
                     game_board.add_piece(new_piece)
                 width += 1
             height += 1
