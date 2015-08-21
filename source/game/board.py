@@ -18,6 +18,7 @@ class Board:
         self.height = height
         self.number_of_boards += 1
         self.pieces = []
+        self.players = []
 
     def add_piece(self, piece):
         """
@@ -26,6 +27,14 @@ class Board:
         :type piece: Piece
         """
         self.pieces.append(piece)
+
+    def add_player(self, player):
+        """
+        Method that adds a player to the board.
+        :param player: The player to add.
+        :type player: Player
+        """
+        self.players.append(player)
 
     def display_text_board(self):
         """Displays the game board in text format."""
