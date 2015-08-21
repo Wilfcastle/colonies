@@ -50,13 +50,13 @@ class Board:
                 # Attempt to find a piece for the new slot.
                 piece_found = False
                 for piece in temp_pieces:
-                    if ((piece.width == x) and (piece.height == y)):
+                    if piece.width == x and piece.height == y:
                         display_string += str(piece.type)
                         temp_pieces.remove(piece)
                         piece_found = True
 
                 # If a piece hasn't been found, place an empty space.
-                if (piece_found is False):
+                if piece_found is False:
                     display_string += '.'
                 display_string += ' '
             display_string += '\n'

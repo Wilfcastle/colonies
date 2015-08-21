@@ -139,7 +139,7 @@ class Parser:
             width = 0
             for char in line.split():
                 # When one is found, add to the Board and perhaps add a Player.
-                if (Parser.is_piece(char)):
+                if Parser.is_piece(char):
                     player = Parser.populate_player_from_char(char, game_board)
                     new_piece = Piece(player,
                                       width,
