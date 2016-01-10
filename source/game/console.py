@@ -8,12 +8,14 @@ class Console:
 
     def __init__(self, board):
         """
-        Constructor for a console.
+        Constructor for a console. 
+        When initialized, the provided board must have at least one player.
         :param board: Provided game board object.
         :type board: Board
         """
         self.board = board
-        self.active_player = None
+        self.active_player = self.board.players[0]
+
 
     def evaluate_board(self):
         """ Handles any updates on board state. Exits if there is a winner. """
@@ -22,7 +24,7 @@ class Console:
             exit()
 
     def get_next_player(self):
-        """ Switches to the next avaiable player with pieces."""
+        """ Switches to the next available player with pieces."""
         if self.active_player is None:
             self.active_player = self.board.players[0]
         else:
@@ -54,9 +56,37 @@ class Console:
             logger.error("Invalid piece selection for player=%u. Need two coordinates not %u.",
                          self.active_player.id, len(piece_coord))
             return False
+        
+        return self.make_move(piece_coord, move_coord);
+    
+    def passive_move_interface(self, piece_coord, move_coord):
+        """
+        Treating the core as passive, make the move from the passed coordinates
+        and progress the active player.
+        :param piece_coord: X and Y coordinates of the piece's location.
+        :type piece_coord: list
+        :param move_coord: X and Y coordinates where to move the piece.
+        :type move_coord: list   
+        :return: If the turn is successful.
+        :rtype: bool
+        """
+        if self.make_move(piece_coord, move_coord) is True:
+            self.get_next_player()
+            return True
+        return False
+        
+    def make_move(self, piece_coord, move_coord):
+        """
+        Perform a move of a single piece.
+        :param piece_coord: X and Y coordinates of the piece's location.
+        :type piece_coord: list
+        :param move_coord: X and Y coordinates where to move the piece.
+        :type move_coord: list   
+        :return: If the turn is successful.
+        :rtype: bool
+        """        
         x = piece_coord[0]
         y = piece_coord[1]
-
         # Check to make sure the chosen piece exists.
         piece_found = False
         for piece in self.board.pieces:
@@ -93,7 +123,6 @@ class Console:
             piece.jump(x, y)
         elif piece.is_clone_distance(x, y):
             new_piece = piece.clone(x, y)
-            action_successful = True
             self.board.pieces.append(new_piece)
             piece = new_piece
         else:
