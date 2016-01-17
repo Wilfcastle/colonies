@@ -51,7 +51,7 @@ class Console:
         :rtype: bool
         """
         # Obtain the move from the current player.
-        piece_coord, move_coord = self.active_player.make_move()
+        piece_coord, move_coord = self.perform_move()
         if len(piece_coord) is not 2:
             logger.error("Invalid piece selection for player=%u. Need two coordinates not %u.",
                          self.active_player.id, len(piece_coord))
@@ -136,7 +136,6 @@ class Console:
     def play(self):
         """ Play the game of colonies. Perform moves from different players until the game is over. """
         while (1):
-            self.board.display_text_board()
             self.get_next_player()
             while self.take_turn() is not True:
                 pass
@@ -186,3 +185,18 @@ class Console:
                 return True
 
         return False
+    
+    def perform_move(self):
+        """
+        Determine if the new coordinates cause a collision.
+        :param x: X-coordinate
+        :type x: Int
+        :param x: Y-coordinate
+        :type x: Int
+        :return: If this would cause collision.
+        :rtype: Bool
+        """
+        if self.server_in_use:
+            return self.active_player.make_move_test()
+        else:
+            return self.active_player.make_move_()
