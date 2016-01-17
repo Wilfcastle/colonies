@@ -61,11 +61,13 @@ class Board:
                 return True
         return False
 
-    def display_text_board(self):
-        """Displays the game board in text format."""
-
+    def create_display_string(self):
+        """
+        Creates a string from the board and returns it.
+        :return: game-state in string form.
+        :rtype: string
+        """
         display_string = ""
-
         # Operate over copies of element lists.
         # Could sort by y & x to save a lot of time.
         temp_pieces = list(self.pieces)
@@ -98,4 +100,8 @@ class Board:
                 display_string += new_char
                 display_string += ' '
             display_string += '\n'
-        print(display_string)
+        return display_string
+
+    def display_text_board(self):
+        """Displays the game board in text format."""
+        print(self.create_display_string())
