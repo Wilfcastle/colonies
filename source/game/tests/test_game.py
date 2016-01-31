@@ -17,17 +17,18 @@ class TestGame:
         Focus on moving pieces using the movement methods that sequentially update the board state.
         Uses a bunch of stuff, including the Parser.
         """
-        
-        # Load test_game_level
+
+        # Load the test level. 
         test_level_path = os.path.join('source', 'game', 'tests', 'resources', 'test_game_level')
-        
-        # Parse the test file into a Board object.
-        board = Board()
-        Parser.parse_file(test_level_path, board)
-        
-        # Create Game using the newly-created Board.
-        game = Game.new_game(board)
-        
+
+        # Parse the test file into a string.
+        board_file = open(test_level_path, 'r')
+        board_string = board_file.read()
+        board_file.close()
+
+        # Create Game using the newly-created board_string.
+        game = Game.new_game(board_string)
+
         # Make sure first and second player can alternate moves.
         resp = game.make_move([0,0], [2,2])
         assert resp.move_status is True
@@ -55,19 +56,20 @@ class TestGame:
         Focus on making moves with storing and restoring game objects.
         """
         
-        # Load test_game_level
+        # Load the test level. 
         test_level_path = os.path.join('source', 'game', 'tests', 'resources', 'test_game_level')
-        
-        # Parse the test file into a Board object.
-        board = Board()
-        Parser.parse_file(test_level_path, board)
-        
-        # Create Game using the newly-created Board.
-        game = Game.new_game(board)
-                
+
+        # Parse the test file into a string.
+        board_file = open(test_level_path, 'r')
+        board_string = board_file.read()
+        board_file.close()
+
+        # Create Game using the newly-created board_string.
+        game = Game.new_game(board_string)
+
         # Restore the game.
         restored_game = Game.restore(game)
-        
+
         # Make sure first and second player can alternate moves post-restore.
         resp = restored_game.make_move([0,0], [2,2])
         assert resp.move_status is True
@@ -84,9 +86,20 @@ class TestGame:
         assert resp.move_status is True
 
     def test_can_be_pickled(self):
-        board = Board()
-        board.add_player(Player(0))
-        game = Game.new_game(board)
+        """
+        Validate that the game can be pickled and unpickled successfully.
+        """
+        
+        # Load the test level. 
+        test_level_path = os.path.join('source', 'game', 'tests', 'resources', 'test_game_level')
+
+        # Parse the test file into a string.
+        board_file = open(test_level_path, 'r')
+        board_string = board_file.read()
+        board_file.close()
+        
+        # Create Game using the newly-created board_string.
+        game = Game.new_game(board_string)
 
         pickled_data = pickle.dumps(game)
         restored_game = pickle.loads(pickled_data)
