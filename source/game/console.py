@@ -136,10 +136,10 @@ class Console:
     def play(self):
         """ Play the game of colonies. Perform moves from different players until the game is over. """
         while (1):
-            self.get_next_player()
             while self.take_turn() is not True:
                 pass
             self.evaluate_board()
+            self.get_next_player()            
 
     def is_winner(self):
         """

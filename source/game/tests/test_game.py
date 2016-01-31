@@ -1,10 +1,12 @@
-"""Items related to testing the console class."""
+"""Items related to testing the game class."""
 import pickle
 
 from source.game.piece import Piece
 from source.game.game import Game
 from source.game.player import Player
 from source.game.board import Board
+from source.game.parser import Parser
+import os
 
 
 class TestGame:
@@ -13,23 +15,20 @@ class TestGame:
     def test_move(self):
         """
         Focus on moving pieces using the movement methods that sequentially update the board state.
+        Uses a bunch of stuff, including the Parser.
         """
-        
-        # Create a board.
-        board = Board()
-        
-        # Create players and pieces for the game's board.            
-        first_cached_player = Player(0)
-        board.add_player(first_cached_player)
-        board.add_piece(Piece(first_cached_player, 0, 0, 0))
-        
-        second_cached_player = Player(1)
-        board.add_player(second_cached_player)
-        board.add_piece(Piece(second_cached_player, 6, 6, 1))
-            
-        # Create game.
-        game = Game.new_game(board)
-        
+
+        # Load the test level. 
+        test_level_path = os.path.join('source', 'game', 'tests', 'resources', 'test_game_level')
+
+        # Parse the test file into a string.
+        board_file = open(test_level_path, 'r')
+        board_string = board_file.read()
+        board_file.close()
+
+        # Create Game using the newly-created board_string.
+        game = Game.new_game(board_string)
+
         # Make sure first and second player can alternate moves.
         resp = game.make_move([0,0], [2,2])
         assert resp.move_status is True
@@ -57,24 +56,20 @@ class TestGame:
         Focus on making moves with storing and restoring game objects.
         """
         
-        # Create a board.
-        board = Board()
-        
-        # Create players and pieces for the game's board.            
-        first_cached_player = Player(0)
-        board.add_player(first_cached_player)
-        board.add_piece(Piece(first_cached_player, 0, 0, 0))
-        
-        second_cached_player = Player(1)
-        board.add_player(second_cached_player)
-        board.add_piece(Piece(second_cached_player, 6, 6, 1))
-        
-        # Create game.
-        game = Game.new_game(board)
-                
+        # Load the test level. 
+        test_level_path = os.path.join('source', 'game', 'tests', 'resources', 'test_game_level')
+
+        # Parse the test file into a string.
+        board_file = open(test_level_path, 'r')
+        board_string = board_file.read()
+        board_file.close()
+
+        # Create Game using the newly-created board_string.
+        game = Game.new_game(board_string)
+
         # Restore the game.
         restored_game = Game.restore(game)
-        
+
         # Make sure first and second player can alternate moves post-restore.
         resp = restored_game.make_move([0,0], [2,2])
         assert resp.move_status is True
@@ -91,9 +86,20 @@ class TestGame:
         assert resp.move_status is True
 
     def test_can_be_pickled(self):
-        board = Board()
-        board.add_player(Player(0))
-        game = Game.new_game(board)
+        """
+        Validate that the game can be pickled and unpickled successfully.
+        """
+        
+        # Load the test level. 
+        test_level_path = os.path.join('source', 'game', 'tests', 'resources', 'test_game_level')
+
+        # Parse the test file into a string.
+        board_file = open(test_level_path, 'r')
+        board_string = board_file.read()
+        board_file.close()
+        
+        # Create Game using the newly-created board_string.
+        game = Game.new_game(board_string)
 
         pickled_data = pickle.dumps(game)
         restored_game = pickle.loads(pickled_data)

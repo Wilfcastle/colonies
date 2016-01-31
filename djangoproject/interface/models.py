@@ -30,18 +30,11 @@ class GameManager(models.Manager):
         """
         Setups a default board to be used.
 
-        :return: The board object.
-        :rtype: CoreBoard
+        :return: The string representation of the Board object.
+        :rtype: string
         """
         only_board = '1....\n.....\n.....\n.....\n....2'
-        player0 = CorePlayer(0)
-        player1 = CorePlayer(1)
-        board = CoreBoard(width=5, height=5)
-        board.add_player(player0)
-        board.add_player(player1)
-        board.add_piece(CorePiece(player0, 0, 0, 0))
-        board.add_piece(CorePiece(player1, 4, 4, 1))
-        return board
+        return only_board
 
 
 class Game(models.Model):
