@@ -1,5 +1,7 @@
 """ Defines object that provides interfaces to those that drive the game. """
 from source.game.console import Console
+from source.game.parser import Parser
+from source.game.board import Board
 
 
 class Game:
@@ -21,14 +23,16 @@ class Game:
         self.board = self.console.board.create_display_string()
         
     @staticmethod
-    def new_game(board):
+    def new_game(string_board):
         """
         Create and return a new game with all the required components.
-        :param board: Passed board that contains players and pieces.
-        :type Board
+        :param board: Passed board in string form that contains players and pieces.
+        :type string
         :return: A new game.
         :rtype: Game
         """        
+        board = Board()
+        Parser.parse_board(string_board, board)
         console = Console(board)
         return Game(console)  
 

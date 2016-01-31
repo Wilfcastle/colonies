@@ -6,7 +6,7 @@ from .logger import logger
 from .player import HumPlayer
 from .player import ComPlayer
 from enum import IntEnum
-
+from io import StringIO # Only compatible with Python3
 
 class Parser:
 
@@ -148,7 +148,7 @@ class Parser:
         return player
 
     @staticmethod
-    def parse_players(file, game_board):
+    def parse_players_from_file(file, game_board):
         """
         Method used to parse an input file,
         populating all provided players with roles and
@@ -215,20 +215,32 @@ class Parser:
                              ai)
 
     @staticmethod
-    def parse_board(file, game_board):
+    def parse_players(string, game_board):
         """
-        Method used to parse in input file and
-        populate all included game elements.
-
-        :param file: Level file to parse.
-        :type file: File
-        :param game_board: Provided Board object.
+        Method to parse players from a string and assign to board.
+        May or may not be needed. 
+        :param string: String to parse.
+        :type string: string
+        :param game_board: Semi-populated Board object.
+        :type game_board: Board
+        """        
+        return
+        
+    @staticmethod
+    def parse_board(string, game_board):
+        """
+        Method to parse an input string and assign to a board.
+        May or may not be needed. 
+        :param string: String to parse.
+        :type string: string
+        :param game_board: Semi-populated Board object in, fully populated out.
         :type game_board: Board
         """
         logger.debug("Parsing Board:")
         height = 0
         width = 0
-        for line in file.readlines():
+        string_board_io = StringIO(string)
+        for line in string_board_io.readlines():
             width = 0
             for char in line.split():
                 # When one is found, add to the Board and perhaps add a
@@ -256,8 +268,7 @@ class Parser:
         game_board.width = width
         game_board.height = height
 
-        logger.debug("Parsed board name=%s with width=%u height=%u pieces=%u players=%u",
-                     file.name,
+        logger.debug("Parsed board with width=%u height=%u pieces=%u players=%u",
                      width,
                      height,
                      len(game_board.pieces),
@@ -267,15 +278,29 @@ class Parser:
     def parse_file(file, game_board):
         """
         Method used to parse in input file and
-        populate a gameboard object with various game elements
+        populate a Board object with various game elements
         and players.
-
         :param file: Level file to parse.
         :type file: File
         :param game_board: Fully populated Board object.
         :type game_board: Board
         """
-        file = open(file, "r")
-        Parser.parse_players(file, game_board)
-        Parser.parse_board(file, game_board)
+        file = open(file, 'r')
+        Parser.parse_players_from_file(file, game_board)
+        Parser.parse_board(file.read(), game_board)
         file.close()
+
+    @staticmethod
+    def parse_string(string_board, game_board):
+        """
+        Method used to parse in input string and
+        populate a Board object with various game elements
+        and players.
+        :param string_board: String to parse.
+        :type string_board: string
+        :param game_board: Fully populated Board object.
+        :type game_board: Board
+        """
+        # Only call the parse board method for now.
+        # The details with player management will be worked out later.
+        Parser.parse_board(string_board, game_board)
